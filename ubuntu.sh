@@ -92,10 +92,10 @@ mysql -u root -e "GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALT
 #
 cd /home/git
 if [ ! -d gitlab ]; then
-    sudo -H -u git git clone https://github.com/gitlabhq/gitlabhq.git gitlab
+    sudo -H -u git git clone https://github.com/naokazuterada/gitlabhq.git gitlab
     cd gitlab
-    sudo -H -u git git checkout 6-5-stable
- 
+    sudo -H -u git git checkout 6-5-stable-fix
+
     sudo -H -u git cp -v config/gitlab.yml.example config/gitlab.yml
     sudo -H -u git cp -v config/unicorn.rb.example config/unicorn.rb
     sudo -H -u git cp -v config/initializers/rack_attack.rb.example config/initializers/rack_attack.rb
@@ -103,28 +103,28 @@ if [ ! -d gitlab ]; then
     sed -i 's/# \(config.middleware.use Rack::Attack\)/\1/' config/application.rb
     sed -i "s/host: localhost/host: $HOSTNAME/" config/gitlab.yml
     sed -i "s/email_from: gitlab@localhost/email_from: gitlab@$HOSTNAME/" config/gitlab.yml
- 
+
     chown -R git log
     chown -R git tmp
     chmod -R u+rwX  log
     chmod -R u+rwX  tmp
- 
+
     sudo -H -u git mkdir /home/git/gitlab-satellites
- 
+
     sudo -H -u git mkdir tmp/pids
     sudo -H -u git mkdir tmp/sockets
     sudo -H -u git mkdir public/uploads
     chmod -R u+rwX  tmp/pids
     chmod -R u+rwX  tmp/sockets
     chmod -R u+rwX  public/uploads
- 
+
     sudo -H -u git git config --global user.name "GitLab"
     sudo -H -u git git config --global user.email "gitlab@$HOSTNAME"
- 
+
     sudo -H -u git cp -v config/database.yml.mysql config/database.yml
     sed -i "s/\"secure password\"/\"$MYSQL_PASSWORD\"/" config/database.yml
     sed -i 's/^\(\s*\)username: .*$/\1username: gitlab/' config/database.yml
- 
+
     cd /home/git/gitlab
     sudo -H -u git bundle install --deployment --without development test postgres || exit 1
 fi
