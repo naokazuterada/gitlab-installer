@@ -128,7 +128,7 @@ chkconfig redis on
 #
 cd /home/git
 if [ ! -d gitlab ]; then
-    sudo -u git git clone git@github.com:naokazuterada/gitlabhq.git gitlab
+    sudo -u git git clone https://github.com:naokazuterada/gitlabhq.git gitlab
     cd gitlab
     sudo -u git git checkout 6-5-stable-fix
 
